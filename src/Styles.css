@@ -587,3 +587,81 @@ padding: 2rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+
+/* ---------- Category Row ---------- */
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Category Dropdown ---------- */
+.category-select {
+  width: 190px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #cfcfcf;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* ---------- Amount Input ---------- */
+.category-amount {
+  width: 140px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #cfcfcf;
+  font-size: 14px;
+}
+
+/* ---------- Remove Button ---------- */
+.remove-category-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: #ffe5e5;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.remove-category-btn:hover {
+  background-color: #ffcccc;
+}
+
+/* ---------- Focus States ---------- */
+.category-select:focus,
+.category-amount:focus {
+  outline: none;
+  border-color: #5b9cff;
+  box-shadow: 0 0 0 2px rgba(91, 156, 255, 0.15);
+}
+
+/* ---------- Remove number arrows ---------- */
+.category-amount::-webkit-inner-spin-button,
+.category-amount::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.category-amount {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ---------- Mobile Responsive ---------- */
+@media (max-width: 600px) {
+  .category-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .category-select,
+  .category-amount,
+  .remove-category-btn {
+    width: 100%;
+  }
+}
