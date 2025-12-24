@@ -40,7 +40,7 @@
   justify-items: flex-start;
   transition: border 0.3s ease;
   background-color: transparent;/* dark background for inputs */
-  color: #000000; /* white text */
+  color: #ffffff; /* white text */
 }
 
 .profile-form select {
@@ -64,7 +64,7 @@
   justify-items: flex-start;
   transition: border 0.3s ease;
   background-color: transparent;/* dark background for inputs */
-  color: #000000; /* white text */
+  color: #ffffff; /* white text */
 }
 
 .profile-form input:focus {

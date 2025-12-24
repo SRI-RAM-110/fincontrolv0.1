@@ -18,10 +18,10 @@ function Contact() {
 
           <div className="contact-details">
             <p>
-              <strong>Email:</strong> fincontrol@gmail.com
+              <strong>Email:</strong> sriramsriram123654@gmail.com
             </p>
             <p>
-              <strong>Mobile:</strong> +91-9876543210
+              <strong>Mobile:</strong> +91-9347158744
             </p>
           </div>
 
@@ -30,7 +30,7 @@ function Contact() {
           <ul>
             <li>
               <a
-                href="https://www.linkedin.com/in/yourprofile"
+                href="www.linkedin.com/in/chaparla-sriram "
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -50,11 +50,11 @@ function Contact() {
 
             <li>
               <a
-                href="https://yourportfolio.com"
+                href="https://sriram-chaparla.lovable.app"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Portfolio
+                My Portfolio
               </a>
             </li>
           </ul>
