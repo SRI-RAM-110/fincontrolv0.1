@@ -12,6 +12,8 @@ import ExpenseHistory from "./ExpenseHistory";
 import BudgetPlanning from "./BudgetPlanning";
 import ProtectedRoute from "./ProtectedRoute";
 import BudgetHistory from "./BudgetHistory";
+import Analytics from "./Analytics";
+
 
 function App() {
   return (
@@ -103,6 +105,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/analytics"
+  element={
+    <ProtectedRoute>
+      <Analytics />
+    </ProtectedRoute>
+  }
+/>
+
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -4,70 +4,54 @@ import Header from "./Header";
 import "./Profile.css";
 import apiFetch, { getSession } from "./utils/api";
 
+const EMPTY_PROFILE = {
+  mobile: "",
+  gender: "",
+  dob: "",
+  marital_status: "",
+  address: "",
+};
+
 function Profile() {
   const [user, setUser] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-    gender: "",
-    dob: "",
-    marital_status: "",
-    address: "",
-  });
+  const [formData, setFormData] = useState(EMPTY_PROFILE);
+  const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  /* ================= LOAD PROFILE ================= */
   useEffect(() => {
     const loadProfile = async () => {
       const session = getSession();
-      if (!session || !session.token) {
-        // Not logged in
+      if (!session?.token) {
         navigate("/login", { replace: true });
         return;
       }
 
       try {
-        // Try to fetch profile from backend
-        const data = await apiFetch("/api/auth/me", { method: "GET" });
-        // If backend returns the user object
-        if (data) {
-          setUser(data);
+        const data = await apiFetch("/api/auth/me");
+        setUser(data);
+        setFormData({
+          ...EMPTY_PROFILE,
+          ...data,
+          dob: data?.dob ? data.dob.slice(0, 10) : "",
+        });
+        setLoading(false);
+        return;
+      } catch {
+        if (session?.user) {
+          const u = session.user;
+          setUser(u);
           setFormData({
-            name: data.name || "",
-            email: data.email || "",
-            mobile: data.mobile || "",
-            gender: data.gender || "",
-            dob: data.dob ? data.dob.slice(0, 10) : "",
-            marital_status: data.marital_status || "",
-            address: data.address || "",
+            ...EMPTY_PROFILE,
+            ...u,
+            dob: u?.dob ? u.dob.slice(0, 10) : "",
           });
           setLoading(false);
           return;
         }
-      } catch (err) {
-        // If API is not available or returns error, we will fallback to session user
-        console.warn("Fetching profile from API failed, falling back to session user", err);
       }
 
-      // Fallback: load user from session stored in localStorage
-      const sessionUser = session?.user;
-      if (sessionUser) {
-        setUser(sessionUser);
-        setFormData({
-          name: sessionUser.name || "",
-          email: sessionUser.email || "",
-          mobile: sessionUser.mobile || "",
-          gender: sessionUser.gender || "",
-          dob: sessionUser.dob ? sessionUser.dob.slice(0, 10) : "",
-          marital_status: sessionUser.marital_status || "",
-          address: sessionUser.address || "",
-        });
-        setLoading(false);
-        return;
-      }
-
-      // If all else fails, force login
       localStorage.removeItem("fincontrol_session");
       navigate("/login", { replace: true });
     };
@@ -75,20 +59,14 @@ function Profile() {
     loadProfile();
   }, [navigate]);
 
-  const handleChange = (e) =>
+  /* ================= HANDLE INPUT ================= */
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    const session = getSession();
-    if (!session || !session.token) {
-      alert("Session expired. Please log in again.");
-      navigate("/login", { replace: true });
-      return;
-    }
-
+  /* ================= SAVE PROFILE ================= */
+  const handleSave = async () => {
     try {
-      // Only send the editable fields to the backend
       const payload = {
         mobile: formData.mobile,
         gender: formData.gender,
@@ -97,84 +75,176 @@ function Profile() {
         address: formData.address,
       };
 
-      const data = await apiFetch("/api/auth/me", {
+      const updated = await apiFetch("/api/auth/me", {
         method: "PUT",
         body: payload,
       });
 
-      // If server returned updated user object, update UI & session
-      if (data) {
-        setUser(data);
-        // update session in localStorage so other pages see updated profile
-        const existingSession = getSession() || {};
-        const mergedUser = { ...(existingSession.user || {}), ...data };
-        localStorage.setItem(
-          "fincontrol_session",
-          JSON.stringify({ ...existingSession, user: mergedUser })
-        );
-        alert("Profile updated successfully!");
-      } else {
-        alert("Failed to update profile");
-      }
+      // 🔥 merge instead of replace
+      const mergedUser = { ...user, ...updated };
+
+      setUser(mergedUser);
+      setFormData({
+        ...EMPTY_PROFILE,
+        ...mergedUser,
+        dob: mergedUser?.dob ? mergedUser.dob.slice(0, 10) : "",
+      });
+      setEditMode(false);
+
+      const session = getSession();
+      localStorage.setItem(
+        "fincontrol_session",
+        JSON.stringify({ ...session, user: mergedUser })
+      );
+
+      alert("Profile updated successfully");
     } catch (err) {
-      console.error("Update profile error:", err);
-      alert(err.message || "Something went wrong. Try again.");
+      alert(err.message || "Update failed");
     }
   };
 
-  if (loading) return <div>Loading profile...</div>;
-  if (!user) return <div>No profile available.</div>;
+  if (loading) return <div className="profile-loading">Loading...</div>;
+  if (!user) return <div>No profile available</div>;
+
+  const initials = user.name?.charAt(0)?.toUpperCase();
 
   return (
     <div>
       <Header />
-      <div className="profile-container">
-        <h2>User Profile</h2>
-        <form onSubmit={handleUpdate} className="profile-form">
-          <label>
-            Name:
-            <input type="text" name="name" value={formData.name} readOnly />
-          </label>
-          <label>
-            Email:
-            <input type="email" name="email" value={formData.email} readOnly />
-          </label>
-          {/* Uncomment editable fields if you want users to update them */}
-          {/*
-          <label>
-            Mobile:
-            <input type="text" name="mobile" value={formData.mobile} onChange={handleChange} />
-          </label>
-          <label>
-            Gender:
-            <select name="gender" value={formData.gender} onChange={handleChange}>
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
-          <label>
-            DOB:
-            <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
-          </label>
-          <label>
-            Marital Status:
-            <select name="marital_status" value={formData.marital_status} onChange={handleChange}>
-              <option value="">Select</option>
-              <option value="Single">Single</option>
-              <option value="Married">Married</option>
-              <option value="Divorced">Divorced</option>
-              <option value="Widowed">Widowed</option>
-            </select>
-          </label>
-          <label>
-            Address:
-            <textarea name="address" value={formData.address} onChange={handleChange} />
-          </label>
-          <button type="submit">Update Profile</button>
-          */}
-        </form>
+
+      <div className="profile-page">
+        {/* ================= PROFILE CARD ================= */}
+        <div className="profile-card">
+          <div className="profile-avatar">{initials}</div>
+          <h2>{user.name}</h2>
+          <p className="profile-email">{user.email}</p>
+
+          {!editMode ? (
+            <button className="edit-btn" onClick={() => setEditMode(true)}>
+              Edit Profile
+            </button>
+          ) : (
+            <div className="edit-actions">
+              <button className="save-btn" onClick={handleSave}>
+                Save
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => {
+                  setFormData({
+                    ...EMPTY_PROFILE,
+                    ...user,
+                    dob: user?.dob ? user.dob.slice(0, 10) : "",
+                  });
+                  setEditMode(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ================= PROFILE DETAILS (VIEW MODE) ================= */}
+        {!editMode && (
+          <div className="profile-summary">
+  <div className="profile-row">
+    <span className="profile-label">Mobile</span>
+    <span className="profile-value">{user.mobile || "Not added"}</span>
+  </div>
+
+  <div className="profile-row">
+    <span className="profile-label">Gender</span>
+    <span className="profile-value">{user.gender || "Not added"}</span>
+  </div>
+
+  <div className="profile-row">
+    <span className="profile-label">DOB</span>
+    <span className="profile-value">
+      {user.dob ? new Date(user.dob).toLocaleDateString() : "Not added"}
+    </span>
+  </div>
+
+  <div className="profile-row">
+    <span className="profile-label">Marital Status</span>
+    <span className="profile-value">
+      {user.marital_status || "Not added"}
+    </span>
+  </div>
+
+  <div className="profile-row full">
+    <span className="profile-label">Address</span>
+    <span className="profile-value">{user.address || "Not added"}</span>
+  </div>
+</div>
+
+        )}
+
+        {/* ================= EDIT FORM ================= */}
+        {editMode && (
+          <div className="profile-details">
+            <h3>Edit Personal Information</h3>
+
+            <div className="details-grid">
+              <div>
+                <label>Mobile</label>
+                <input
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div>
+                <label>Gender</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label>Date of Birth</label>
+                <input
+                  type="date"
+                  name="dob"
+                  value={formData.dob}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div>
+                <label>Marital Status</label>
+                <select
+                  name="marital_status"
+                  value={formData.marital_status}
+                  onChange={handleChange}
+                >
+                  <option value="">Select</option>
+                  <option>Single</option>
+                  <option>Married</option>
+                  <option>Divorced</option>
+                  <option>Widowed</option>
+                </select>
+              </div>
+
+              <div className="full-width">
+                <label>Address</label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

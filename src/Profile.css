@@ -1,109 +1,194 @@
-.profile-container {
-  padding: 2rem;
-  height: 500px;
+/* ===== Page Layout ===== */
+.profile-page {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 16px;
+  color: #fff;
+}
+
+/* ===== Top Profile Card ===== */
+.profile-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 30px;
   text-align: center;
-  padding-bottom: 100px;
-  max-width: 1100px;
-  margin: auto;
-  background-color: #5b575746;
-  border-radius: 20px;
-  font-size: larger;
+  margin-bottom: 30px;
 }
 
-/* Heading */
-.profile-container h2 {
-  font-size: 30px;
-  margin-bottom: 20px;
-  color: #ffffff;
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5f7cff, #4fd1c5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0 auto 12px;
 }
 
-/* Form styling */
-.profile-form {
+.profile-email {
+  opacity: 0.8;
+  margin-bottom: 14px;
+}
+
+/* ===== Buttons ===== */
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #4f7cff;
+  color: #fff;
+}
+
+.save-btn {
+  background: #22c55e;
+  color: #fff;
+}
+
+.cancel-btn {
+  background: #ef4444;
+  color: #fff;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ===== Profile Summary Wrapper ===== */
+.profile-summary {
+  margin-top: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+/* ===== Each Row ===== */
+.profile-row {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
 }
 
-.profile-form label {
-  text-align: left;
-  font-size: 25px;
-  margin-bottom: 8px;
+/* Full width (Address) */
+.profile-row.full {
+  grid-column: span 2;
+}
+
+/* ===== Label ===== */
+.profile-label {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+}
+
+/* ===== Value ===== */
+.profile-value {
+  background: rgba(255, 255, 255, 0.14);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
   color: #ffffff;
-}
-/* Inputs */
-.profile-form input {
-  padding: 12px 22px;
-  margin-left: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 20px;
-  justify-items: flex-start;
-  transition: border 0.3s ease;
-  background-color: transparent;/* dark background for inputs */
-  color: #ffffff; /* white text */
+  min-height: 40px;
+  display: flex;
+  align-items: center;
 }
 
-.profile-form select {
-  padding: 12px 22px;
-  margin-left: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 20px;
-  justify-items: flex-start;
-  transition: border 0.3s ease;
-  background-color: transparent;/* dark background for inputs */
-  color: #000000; /* white text */
-}
-
-.profile-form textarea {
-  padding: 12px 22px;
-  margin-left: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 20px;
-  justify-items: flex-start;
-  transition: border 0.3s ease;
-  background-color: transparent;/* dark background for inputs */
-  color: #ffffff; /* white text */
-}
-
-.profile-form input:focus {
-  border-color: #007bff;
-}
-
-/* Buttons */
-.profile-form button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.profile-form button:hover {
-  background-color: #0056b3;
-}
-
-/* User ID */
-.profile-form p {
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #ffffff;
-}
-
-/* Responsive adjustments */
+/* ===== Mobile Responsive ===== */
 @media (max-width: 600px) {
-  .profile-container {
-    margin: 60px 15px;
-    padding: 25px;
+  .profile-summary {
+    grid-template-columns: 1fr;
   }
 
-  .profile-form input,
-  .profile-form button {
-    font-size: 14px;
-    padding: 10px;
+  .profile-row.full {
+    grid-column: span 1;
+  }
+}
+
+/* ===== Details Card ===== */
+.profile-details {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.profile-details h3 {
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+/* ===== Grid ===== */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.details-grid label {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* ===== Inputs & View Fields ===== */
+.details-grid input,
+.details-grid select,
+.details-grid textarea,
+.view-field {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Disabled look */
+.details-grid input:disabled,
+.details-grid select:disabled,
+.details-grid textarea:disabled {
+  opacity: 0.9;
+  cursor: not-allowed;
+}
+
+/* View-only text (same look as inputs) */
+.view-field {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+/* Full width row */
+.full-width {
+  grid-column: span 2;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 1;
   }
 }
