@@ -34,11 +34,11 @@ function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                LinkedIn
+                 Click Here for My LinkedIn
               </a>
             </li>
 
-            <li>
+            {/* <li>
               <a
                 href="https://www.hackerrank.com/yourprofile"
                 target="_blank"
@@ -46,7 +46,7 @@ function Contact() {
               >
                 HackerRank
               </a>
-            </li>
+            </li> */}
 
             <li>
               <a
@@ -54,7 +54,7 @@ function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                My Portfolio
+                Click Here for My Portfolio
               </a>
             </li>
           </ul>
